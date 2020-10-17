@@ -4,18 +4,18 @@ import { Link } from 'react-router-dom';
 
 
 
-const Navbar = ({ icon, title }) => {
+const Navbar = ({ icon, title, clearAlert }) => {
   return (
     <nav className= "navbar bg-primary">
       <h1>
-        <i className={icon} /><Link to='/'>{title}</Link>
+        <i className={icon} /><Link to='/' onClick={clearAlert} >{title}</Link>
       </h1>
       <ul>
         <li>
-          <Link to='/'>Home</Link>
+          <Link to='/' onClick={clearAlert} >Home</Link>
         </li>
         <li>
-          <Link to='/about' >About</Link>
+          <Link to='/about' onClick={clearAlert} >About</Link>
         </li>
       </ul>
     </nav>

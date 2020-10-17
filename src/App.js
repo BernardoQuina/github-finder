@@ -14,17 +14,10 @@ class App extends Component {
   state = {
     users: [],
     user: {},
+    repos: [],
     loading: false,
     alert: null
   }
-
-  // async componentDidMount() {
-  //   this.setState({ loading: true })
-
-  //   const res = await axios.get(`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
-
-  //   this.setState({ users: res.data, loading: false });
-  // }
 
   // Search Github users
   searchUsers = async (text) => {
@@ -44,6 +37,15 @@ class App extends Component {
     this.setState({ user: res.data, loading: false, alert: null });
   }
 
+  // Get users repos
+  getUserRepos = async (username) => {
+    this.setState({ loading: true })
+
+    const res = await axios.get(`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+
+    this.setState({ repos: res.data, loading: false, alert: null });
+  }
+
   // Clear users from state
   clearUsers = () => {
     this.setState({ users: [], loading: false, alert: null });
@@ -54,15 +56,20 @@ class App extends Component {
     this.setState({ alert: { msg, type } });
   }
 
+  // (just) clears alerts
+  clearAlert = () => {
+    this.setState({alert: null})
+  }
+
   render() {
     // Destructuring
-    const { searchUsers, clearUsers, setAlert, getUser } = this;
-    const { users, user, loading, alert } = this.state;
+    const { searchUsers, clearUsers, setAlert, getUser, clearAlert, getUserRepos } = this;
+    const { users, user, repos, loading, alert } = this.state;
     
     return (
       <Router>
         <div className="App">
-          <Navbar />
+          <Navbar clearAlert={clearAlert} />
           <div className="container">
             <Alert alert={alert} />
             <Switch>
@@ -82,7 +89,9 @@ class App extends Component {
                 <User
                   { ... props }
                   getUser={getUser}
+                  getUserRepos={getUserRepos}
                   user={user}
+                  repos={repos}
                   loading={loading}
                 />
               )} />
