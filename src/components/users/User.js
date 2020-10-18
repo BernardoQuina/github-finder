@@ -29,7 +29,9 @@ const User = ({ user, loading, repos, getUserRepos, getUser, match }) => {
   } = user;
 
 
-  if (loading) return <Spinner />;
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <Fragment>
