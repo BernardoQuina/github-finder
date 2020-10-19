@@ -1,42 +1,45 @@
 import React, { useContext, useEffect, Fragment } from 'react';
+import { Link } from 'react-router-dom';
+
 import Spinner from '../layout/Spinner';
 import Repos from '../repos/Repos';
-import { Link } from 'react-router-dom';
+
 import GithubContext from '../../context/github/githubContext';
+import { getUserAndRepos } from '../../context/github/actions';
+import { GET_USER_AND_REPOS, SET_LOADING } from '../../context/types';
 
 
 const User = ({ match }) => {
-  const githubContext = useContext(GithubContext)
-
-  const { getUser, loading, user, repos, getUserRepos } = githubContext;
+  
+  const {
+    user: {
+      name,
+      avatar_url,
+      location,
+      bio,
+      blog,
+      login,
+      html_url,
+      followers,
+      following,
+      public_repos,
+      company,
+      public_gists,
+      hireable
+    },
+    loading,
+    dispatch,
+    repos
+  } = useContext(GithubContext);
 
   useEffect(() => {
-    getUser(match.params.login);
-    getUserRepos(match.params.login);
-    // eslint-disable-next-line
-  }, []);
+    dispatch({ type: SET_LOADING });
+    getUserAndRepos(match.params.login).then(res =>
+      dispatch({ type: GET_USER_AND_REPOS, payload: res })
+    )
+  }, [dispatch, match.params.login]);
 
-
-  const {
-    name,
-    avatar_url,
-    location,
-    bio,
-    blog,
-    login,
-    html_url,
-    followers,
-    following,
-    public_repos,
-    company,
-    public_gists,
-    hireable
-  } = user;
-
-
-  if (loading) {
-    return <Spinner />;
-  }
+  if (loading) return <Spinner />;
 
   return (
     <Fragment>
