@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import AlertContext from '../../context/alert/alertContext';
 
 
 
-const Navbar = ({ icon, title, clearAlert }) => {
+const Navbar = ({ icon, title }) => {
+
+  const alertContext = useContext(AlertContext);
+
+  const { clearAlert } = alertContext;
+
   return (
     <nav className= "navbar bg-primary">
       <h1>
